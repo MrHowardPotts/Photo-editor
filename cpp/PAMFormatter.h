@@ -1,0 +1,38 @@
+#pragma once
+#include"Formatter.h"
+
+struct Pam_read {
+	int WIDTH{ 0 };
+	int HEIGHT{ 0 };
+	int DEPTH{ 4 };
+	int MAXVAL{255};
+	std::string TUPLTYPE{ "RGB_ALPHA" };
+
+	friend std::ostream& operator<<(std::ostream&, const Pam_read&);
+};
+
+struct Pam_write {
+	const char space[1] = { 0x0a };
+	const char P7[2] = { 0x50,0x37 };
+	const char width[6] = { 0x57,0x49,0x44,0x54,0x48,0x20 };
+	const char height[7] = { 0x48,0x45,0x49,0x47,0x48,0x54,0x20 };
+	const char depth[6] = { 0x44,0x45,0x50,0x54,0x48,0x20 };
+	const char maxval[7] = { 0x4d,0x41,0x58,0x56,0x41,0x4c,0x20 };
+	const char tupltype[9] = { 0x54,0x55,0x50,0x4c,0x54,0x59,0x50,0x45,0x20 };
+	const char endhrd[6] = { 0x45,0x4e,0x44,0x48,0x44,0x52 };
+	const char rgb_alpha[9] = { 0x52,0x47,0x42,0x5f,0x41,0x4c,0x50,0x48,0x41 };
+	const char dva_pet_pet[3] = { 0x32,0x35,035 };
+};
+
+
+
+class PAMFormatter : public Formatter {
+
+public:
+	Pam_read HR;
+	Pam_write HW;
+	PAMFormatter(const std::string&);
+	void read(Layer& layer) override;
+	void write(const std::string& output_name, Image& image) override;
+
+};
